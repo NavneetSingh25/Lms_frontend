@@ -3,8 +3,37 @@ import apj from "../assets/apj.png"
 import bill from "../assets/bill.png"
 import steve from "../assets/steve.png"
 import einstein from "../assets/einstein.png"
+import CarouselSlide from "../Components/CarouselSlide";
 
 function AboutUs(){
+
+    const celebrities=[
+        {
+            name:"Apj Abdul Kalam",
+            img:apj,
+            description:"Dream is not that which you see while sleeping, it is something that does not let you sleep.",
+            slideNumber:1
+        },
+        {
+            name:"Steve Jobs",
+            img:steve,
+            description:"Don't let the noise of others' opinions drown out your own inner voice.",
+            slideNumber:2
+        },
+        {
+            name:"Bill Gates",
+            img:bill,
+            description:"It's fine to celebrate success, but it is more important to heed the lessons of failure",
+            slideNumber:3
+        },
+        {
+            name:"Albert EInstein",
+            img:einstein,
+            description:"Try not to become a man of success, but rather try to become a man of value.",
+            slideNumber:4
+        }
+    ]
+
     return(
         <HomeLayout>
             <div className="pl-20 pt-15 flex flex-col text-white">
@@ -25,64 +54,16 @@ function AboutUs(){
                 </div>
 
                 <div className="carousel w-1/2  m-auto my-16 ">
-                <div id="slide1" className="carousel-item relative w-full">
-                    <div className="flex flex-col items-center justify-center gap-4 p-[16%]">
-                        <img
-                    src={apj}
-                    className="w-40 rounded-full border-2 border-gray-400 " />
-
-                    <p className="text-xl text-gray-200">{"Dream is not that which you see while sleeping, it is something that does not let you sleep."}
- </p>
-                    <h3 className="text-2xl font-semi-bold">Apj Abdul Kalam</h3>
-                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                    <a href="#slide4" className="btn btn-circle">❮</a>
-                    <a href="#slide2" className="btn btn-circle">❯</a>
-                    </div>
-                    </div>
-                </div>
-                <div id="slide2" className="carousel-item relative w-full">
-                    <div className="flex flex-col items-center justify-center gap-4 p-[16%]">
-                        <img
-                    src={steve}
-                    className="w-40 rounded-full border-2 border-gray-400 " />
-                    <p className="text-xl text-gray-200">{"Don't let the noise of others' opinions drown out your own inner voice."}
- </p>
-                    <h3 className="text-2xl font-semi-bold">Steve Jobs</h3>
-                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                    <a href="#slide1" className="btn btn-circle">❮</a>
-                    <a href="#slide3" className="btn btn-circle">❯</a>
-                    </div>
-                    </div>
-                </div>
-                
-                <div id="slide3" className="carousel-item relative w-full">
-                    <div className="flex flex-col items-center justify-center gap-4 p-[16%]">
-                        <img
-                    src={bill}
-                    className="w-40 rounded-full border-2 border-gray-400 " />
-                    <p className="text-xl text-gray-200">{"It's fine to celebrate success, but it is more important to heed the lessons of failure"}
- </p>
-                    <h3 className="text-2xl font-semi-bold">Bill Gates</h3>
-                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                    <a href="#slide2" className="btn btn-circle">❮</a>
-                    <a href="#slide4" className="btn btn-circle">❯</a>
-                    </div>
-                    </div>
-                </div>
-                <div id="slide4" className="carousel-item relative w-full">
-                    <div className="flex flex-col items-center justify-center gap-4 p-[16%]">
-                        <img
-                    src={einstein}
-                    className="w-40 rounded-full border-2 border-gray-400 " />
-                    <p className="text-xl text-gray-200">{"Try not to become a man of success, but rather try to become a man of value."}
- </p>
-                    <h3 className="text-2xl font-semi-bold">Albert EInstein</h3>
-                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                    <a href="#slide3" className="btn btn-circle">❮</a>
-                    <a href="#slide1" className="btn btn-circle">❯</a>
-                    </div>
-                    </div>
-                </div>
+                {celebrities && celebrities.map((celebrity)=>(
+                    <CarouselSlide 
+                        key={celebrity.slideNumber}
+                        image={celebrity.img}
+                        tile={celebrity.name}
+                        description={celebrity.description}
+                        slideNumber={celebrity.slideNumber}
+                        totalSlides={celebrities.length}
+                    />
+                ))}
                 </div>
             </div>
         </HomeLayout>
