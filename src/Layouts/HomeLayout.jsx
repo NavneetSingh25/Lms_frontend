@@ -55,7 +55,7 @@ function HomeLayout({ children }) {
                   <Link to="/login">Login</Link>
                 </button>
                 <button className="bg-gradient-to-r from-purple-400 to-purple-600  text-white font-semibold  px-5 py-3 mt-4 rounded-lg transition-all ease-in-out duration-300">
-                  <Link to="/login">SignUp</Link>
+                  <Link to="/signup">SignUp</Link>
                 </button>
               </div>
               </li>
