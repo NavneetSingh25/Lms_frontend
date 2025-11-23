@@ -4,7 +4,7 @@ function CourseCard({ data }) {
     const navigate = useNavigate();
     return (
         <div
-            onClick={() => navigate(`/course/description/${data?._id || ""}`)}
+            onClick={() => navigate(`/course/description`,{state:{...data}})}
             className="w-[22rem] h-[430px] bg-gray-800 shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300 group"
         >
             <div className="overflow-hidden">
@@ -24,7 +24,7 @@ function CourseCard({ data }) {
                         <span className="text-yellow-500 font-bold">
                             Total Lectures:
                         </span>
-                        {data?.numberoflectures}
+                        {data?.NumberofLectures}
                     </p>
                     <p className="font-semibold">
                         <span className="text-yellow-500 font-bold">
