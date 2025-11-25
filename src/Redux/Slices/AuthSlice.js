@@ -40,25 +40,19 @@ export const login = createAsyncThunk("auth/login", async (data) => {
   }
 });
 
-// logout: don't throw on server error — return failure payload so client can still clear local state
-export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+export const logout = createAsyncThunk("auth/logout", async () => {
   try {
-    // call server logout but don't surface server-side errors to the user as an error toast
-    const res = await axiosInstance.get("user/logout");
-    // only show success when server returns OK-ish response
-    if (res && res.status >= 200 && res.status < 300) {
-      toast.success("Logged out successfully");
-      return res.data;
+    const res = await axiosInstance.post("user/logout");
+    // only show success if server responds OK
+    if (res.status >= 200 && res.status < 300) {
+      return { success: true, message: "Logged out successfully" };
     }
-    // non-2xx response: return failure payload so reducer / UI can still clear client-side state
-    const message = res?.data?.message || `Logout failed (status ${res?.status})`;
-    return { success: false, message };
+    return { success: false, message: "Logout failed on server" };
   } catch (error) {
-    // network / 4xx/5xx: do not show a 404 error toast here (was causing the 404 toast)
-    // log for debugging and return a failure payload
-    // console.warn("Logout request failed:", error);
-    const message = error?.response?.data?.message || error.message || "Logout failed";
-    return { success: false, message };
+    // server error (404, 500, etc) — but we still want to clear client state
+    // return success so reducer clears local auth
+    console.warn("Server logout failed:", error.message);
+    return { success: true, message: "Logged out (server unavailable)" };
   }
 });
 
@@ -78,16 +72,23 @@ const auth = createSlice({
           localStorage.setItem("isLoggedIn", JSON.stringify(true));
           localStorage.setItem("data", JSON.stringify(user));
           localStorage.setItem("role", user.role || "");
+          const token = payload.token || payload.accessToken || payload.jwtToken;
+          if (token) {
+            localStorage.setItem("token", token);
+          }
         }
       })
       .addCase(logout.fulfilled, (state, action) => {
-        // always clear client-side auth state regardless of server response
+        // always clear client state regardless of server response
         state.isLoggedIn = false;
         state.data = null;
         state.role = "";
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("data");
         localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        // show success toast in reducer
+        toast.success(action.payload?.message || "Logged out successfully");
       });
   },
 });

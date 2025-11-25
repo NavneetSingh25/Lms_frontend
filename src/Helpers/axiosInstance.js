@@ -1,9 +1,20 @@
-import axios  from "axios";
-const BASE_URL="http://localhost:3000/api/v1/";
+// src/Helpers/axiosInstance.js
+import axios from "axios";
 
-const axiosInstance=axios.create();
+const BASE_URL = "http://localhost:3000/api/v1";
 
-axiosInstance.defaults.baseURL=BASE_URL;
-axiosInstance.defaults.withCredentials=true;
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+});
+
+// ✅ Inject token into every request
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export default axiosInstance;

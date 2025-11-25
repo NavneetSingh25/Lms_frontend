@@ -36,7 +36,7 @@ function AboutUs(){
 
     return(
         <HomeLayout>
-            <div className="pl-20 pt-15 flex flex-col text-white">
+            <div className="pl-20 pt-5 flex flex-col text-white">
                 <div className="flex items-center gap-5 mx-10">
                     <section className="w-1/2 space-y-10">
                     <h1 className="text-4xl font-bold text-yellow-500">
@@ -53,7 +53,7 @@ function AboutUs(){
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScoL3lROZceuLx5ywHQTzL4_1gOMhxWMPONw&s" id="test1" alt="aboutus" style={{filter:"drop-shadow(0px 10px 10px rgb(0,0,0));"}} className="w-1/2 rounded-lg drop-shadow-2xl"  />
                 </div>
 
-                <div className="carousel w-1/2  m-auto my-16 ">
+                <div className="carousel w-1/2  m-auto my-6 ">
                 {celebrities && celebrities.map((celebrity)=>(
                     <CarouselSlide 
                         key={celebrity.slideNumber}
