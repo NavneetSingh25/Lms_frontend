@@ -10,13 +10,10 @@ const initialState = {
 
 export const createaccount = createAsyncThunk("auth/signup", async (data) => {
   try {
-    const promise = axiosInstance.post("user/register", data);
-    toast.promise(promise, {
-      pending: "Creating your account",
-      success: "Account created successfully",
-      error: "Failed to create account",
-    });
-    const res = await promise;
+    const res = await axiosInstance.post("user/register", data);
+    if (res.data?.success) {
+      toast.success(res.data?.message || "Account created successfully");
+    }
     return res.data;
   } catch (error) {
     toast.error(error?.response?.data?.message || error.message || "Signup failed");
@@ -26,13 +23,10 @@ export const createaccount = createAsyncThunk("auth/signup", async (data) => {
 
 export const login = createAsyncThunk("auth/login", async (data) => {
   try {
-    const promise = axiosInstance.post("user/login", data);
-    toast.promise(promise, {
-      pending: "wait! authentication in progress..",
-      success: "login successful",
-      error: "Failed to login",
-    });
-    const res = await promise;
+    const res = await axiosInstance.post("user/login", data);
+    if (res.data?.success) {
+      toast.success(res.data?.message || "Login successful");
+    }
     return res.data;
   } catch (error) {
     toast.error(error?.response?.data?.message || error.message || "Login failed");
@@ -43,18 +37,40 @@ export const login = createAsyncThunk("auth/login", async (data) => {
 export const logout = createAsyncThunk("auth/logout", async () => {
   try {
     const res = await axiosInstance.post("user/logout");
-    // only show success if server responds OK
     if (res.status >= 200 && res.status < 300) {
       return { success: true, message: "Logged out successfully" };
     }
     return { success: false, message: "Logout failed on server" };
   } catch (error) {
-    // server error (404, 500, etc) — but we still want to clear client state
-    // return success so reducer clears local auth
     console.warn("Server logout failed:", error.message);
     return { success: true, message: "Logged out (server unavailable)" };
   }
 });
+
+export const updateProfile = createAsyncThunk("/user/update/profile", async (data) => {
+    try {
+        const res = axiosInstance.put(`user/update`, data[1]);
+        toast.promise(res, {
+            loading: "Wait! profile update in progress...",
+            success: (data) => {
+                return data?.data?.message;
+            },
+            error: "Failed to update profile"
+        });
+        return (await res).data;
+    } catch(error) {
+        toast.error(error?.response?.data?.message);
+    }
+})
+
+export const getUserData = createAsyncThunk("/user/details", async () => {
+    try {
+        const res = axiosInstance.get("user/me");
+        return (await res).data;
+    } catch(error) {
+        toast.error(error.message);
+    }
+})
 
 const auth = createSlice({
   name: "auth",
@@ -79,7 +95,6 @@ const auth = createSlice({
         }
       })
       .addCase(logout.fulfilled, (state, action) => {
-        // always clear client state regardless of server response
         state.isLoggedIn = false;
         state.data = null;
         state.role = "";
@@ -87,9 +102,17 @@ const auth = createSlice({
         localStorage.removeItem("data");
         localStorage.removeItem("role");
         localStorage.removeItem("token");
-        // show success toast in reducer
         toast.success(action.payload?.message || "Logged out successfully");
-      });
+      })
+      .addCase(getUserData.fulfilled, (state, action) => {
+            if(!action?.payload?.user) return;
+            localStorage.setItem("data", JSON.stringify(action?.payload?.user));
+            localStorage.setItem("isLoggedIn", true);
+            localStorage.setItem("role", action?.payload?.user?.role);
+            state.isLoggedIn = true;
+            state.data = action?.payload?.user;
+            state.role = action?.payload?.user?.role
+        });
   },
 });
 
