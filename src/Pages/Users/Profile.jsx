@@ -1,10 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
 import HomeLayout from "../../Layouts/HomeLayout";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { cancelCourseBundle } from "../../Redux/Slices/RajorPaySlice";
+import { getUserData } from "../../Redux/Slices/AuthSlice";
+import { useNavigate } from "react-router-dom";
 
 function Profile(){
     const dispatch=useDispatch();
+    const navigate=useNavigate();
     const {data}=useSelector((state)=>state.auth);
+    async function handleCancellation() {
+        toast("Initiating cancellation");
+        await dispatch(cancelCourseBundle());
+        await dispatch(getUserData());
+        toast.success("Cancellation completed!");
+        navigate("/");
+
+    }
     return(
         <HomeLayout>
             <div className="min-h-[90vh] flex  items-center justify-center">
@@ -34,14 +47,14 @@ function Profile(){
                                 Update Profile
                             </Link>
                         </div>
-                        {data?.subscription?.status==="ACTIVE" && (
+                        {data?.subscription?.status==="active" && (
                             <div className="mt-6 text-center">
-                                <Link to="/unsubscribe" className="px-4 py-2  bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition"> Unsubscribe </Link>
+                                <Link to="/unsubscribe" onClick={handleCancellation} className="px-4 py-2  bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition"> Unsubscribe </Link>
                             </div>
                         )}
-                        {data?.subscription?.status!=="ACTIVE" && (
+                        {data?.subscription?.status!=="active" && (
                             <div className="mt-6 text-center">
-                                <Link to="/subscribe" className="px-4 py-2  bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition"> Subscribe Now </Link>
+                                <Link to="/checkout" className="px-4 py-2  bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 transition"> Subscribe Now </Link>
                             </div>
                         )}
                 </div>

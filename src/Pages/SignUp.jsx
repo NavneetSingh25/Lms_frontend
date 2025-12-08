@@ -58,10 +58,7 @@ function SignUp(){
             toast.error("Invalid email address");
             return;
         }
-        if(!signUpData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)){
-            toast.error("Password must contain at least one uppercase letter, one lowercase letter, one number and one special character");
-            return;
-        }
+        
         
         const formData=new FormData();
         formData.append("Name", signUpData.Name);

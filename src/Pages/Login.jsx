@@ -37,16 +37,25 @@ function Login() {
       return;
     }
 
-    try {
+      try {
       const payload = await dispatch(login(loginData)).unwrap();
-      // backend might return payload.data or payload.user
+
       if (payload?.success) {
         toast.success("Login successful");
+
+        // ✅ Store token in localStorage
+        if (payload?.token) {
+          localStorage.setItem("token", payload.token);
+        } else {
+          toast.error("Token missing from response");
+          return;
+        }
+
         setLoginData({ email: "", password: "" });
         navigate("/");
       } else {
         toast.error(payload?.message || "Login failed");
-      } 
+      }
     } catch (err) {
       toast.error(err?.response?.data?.message || err.message || "Login failed");
     }

@@ -14,9 +14,13 @@ import RequireAuth from './Components/Auth/RequireAuth';
 import CreateCourse from './Pages/Courses/CreateCourse';
 import Profile from './Pages/Users/Profile';
 import EditProfile from './Pages/Users/Editprofile';
+import Checkout from './Pages/Payment/checkout';
+import CheckoutSuccess from './Pages/Payment/CheckoutSuccess';
+import Unsubscribe from './Pages/Payment/Unsubscribe';
+import DisplayLectures from './Pages/Dashboard/DisplayLectures';
+import AddLecture from './Pages/Dashboard/AddLectures';
 
 function App() {
-
   return (
     <Routes>
       <Route path="/" element={<HomePage/>}></Route>
@@ -27,19 +31,26 @@ function App() {
       <Route path="/contact" element={<Contact/>}></Route>
       <Route path="/denied" element={<Denied/>}></Route>
       <Route path="/course/description" element={<CourseDescription/>}></Route>
+
       <Route element={<RequireAuth allowedRole={["ADMIN"]}/>}>
         <Route path="/course/create" element={<CreateCourse/>}></Route>
+        {/* changed to accept :id param so AddLecture works on direct URL too */}
+        <Route path="/course/:id/addlecture" element={<AddLecture/>}></Route>
       </Route>
 
       <Route element={<RequireAuth allowedRole={["ADMIN","USER"]}/>}>
         <Route path="/user/profile" element={<Profile/>}></Route>
         <Route path="/user/editprofile" element={<EditProfile/>}></Route>
+        <Route path="/checkout" element={<Checkout/>}></Route>
+        <Route path="/checkout/success" element={<CheckoutSuccess/>}></Route>
+        <Route path="/checkout/fail" element={<Checkout/>}></Route>
+        <Route path="/unsubscribe" element={<Unsubscribe/>}></Route>
+        <Route path="/course/:id/displaylectures" element={<DisplayLectures/>}></Route>
       </Route>
 
       <Route path="*" element={<NotFound/>}></Route>
     </Routes>
-
   )
 }
 
-export default App
+export default App;
