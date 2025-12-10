@@ -19,6 +19,7 @@ import CheckoutSuccess from './Pages/Payment/CheckoutSuccess';
 import Unsubscribe from './Pages/Payment/Unsubscribe';
 import DisplayLectures from './Pages/Dashboard/DisplayLectures';
 import AddLecture from './Pages/Dashboard/AddLectures';
+import AdminDashboard from './Pages/Dashboard/AdminDashboard';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/course/create" element={<CreateCourse/>}></Route>
         {/* changed to accept :id param so AddLecture works on direct URL too */}
         <Route path="/course/:id/addlecture" element={<AddLecture/>}></Route>
+        <Route path="/admin/dashboard" element={<AdminDashboard/>}></Route>
       </Route>
 
       <Route element={<RequireAuth allowedRole={["ADMIN","USER"]}/>}>
